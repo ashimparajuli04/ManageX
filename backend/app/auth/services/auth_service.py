@@ -6,7 +6,7 @@ from jwt import PyJWTError
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
 from database import get_session
 
