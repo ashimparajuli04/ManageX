@@ -1,13 +1,10 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()  # create tables, seed data, etc.
+    yield
+    # cleanup code here if needed
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_number}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+app = FastAPI(lifespan=lifespan)
