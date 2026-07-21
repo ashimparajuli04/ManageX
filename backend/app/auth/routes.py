@@ -3,11 +3,11 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
-from database import get_session
-from auth.models.token import Token
-from auth.services.auth_service import authenticate_user, create_access_token
+from core.database import get_session
+from auth.schemas import Token
+from auth.services import authenticate_user, create_access_token
 
 
 router = APIRouter(

@@ -8,10 +8,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from database import get_session
+from core.database import get_session
 
-from auth.models.token import TokenData
-from auth.utils.auth_utils import verify_password
+from auth.schemas import TokenData
+from auth.utils import verify_password
 
 from user.models.user import User, UserRole
 from user.services.user_service import get_user_by_email

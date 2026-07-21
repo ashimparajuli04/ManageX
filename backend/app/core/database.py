@@ -2,18 +2,24 @@ from dotenv import load_dotenv
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# PostgreSQL engine (no connect_args needed)
-engine = create_engine(DATABASE_URL, echo=False)
+engine = create_engine(DATABASE_URL) #type: ignore
 
-def init_db():
-    SQLModel.metadata.create_all(engine)
+SessionLocal = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    expire_on_commit=False,
+)
+
 
 def get_session():
-    with Session(engine) as session:
-        yield session
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
