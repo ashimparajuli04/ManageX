@@ -9,8 +9,8 @@ services:
       - .:/app
       - /app/.venv
     command: uv run uvicorn app.core.main:app --host 0.0.0.0 --reload
-    environment:
-      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/managex
+    env_file:
+      - .env
     dns:
           - 8.8.8.8
           - 8.8.4.4

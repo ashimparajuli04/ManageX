@@ -8,13 +8,13 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from core.database import get_session
+from app.core.database import get_session
 
-from auth.schemas import TokenData
-from auth.utils import verify_password
+from app.auth.schemas import TokenData
+from app.auth.utils import verify_password
 
-from user.models.user import User, UserRole
-from user.services.user_service import get_user_by_email
+from app.user.models import User, UserRole
+from app.user.services import get_user_by_email
 from dotenv import load_dotenv
 import os
 
@@ -78,7 +78,7 @@ def get_current_user(
         payload = jwt.decode(
             token,
             SECRET_KEY,
-            algorithms=[ALGORITHM],
+            algorithms=[ALGORITHM], #type: ignore
         )
         email = payload.get("sub")
         if email is None:
