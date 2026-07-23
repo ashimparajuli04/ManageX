@@ -16,9 +16,15 @@ def get_user_by_username(session: Session, username: str):
 
 
 def create_user(session: Session, user_data: UserCreate):
-
+    errors = {}
+    
     if get_user_by_email(session, user_data.email):
-        raise ValueError("User with this email already exists")
+        errors["email"] = "User with this email already exists"
+    if get_user_by_username(session, user_data.username):
+        errors["username"] = "User with this username already exists"
+    if errors:
+        raise ValueError(errors)
+    
 
     user = User(
         email=user_data.email,
@@ -27,6 +33,7 @@ def create_user(session: Session, user_data: UserCreate):
         last_name=user_data.last_name,
         password_hash=get_password_hash(user_data.password),
     )
+    
     session.add(user)
     session.commit()
     session.refresh(user)

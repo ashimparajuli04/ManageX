@@ -1,6 +1,6 @@
 # from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.auth import routes
+from app.core.all_routes import routers
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
 #     yield
@@ -9,4 +9,7 @@ from app.auth import routes
 
 app = FastAPI()
 
-app.include_router(routes.router)
+for router in routers:
+    app.include_router(router)
+
+

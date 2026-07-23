@@ -1,5 +1,5 @@
-from auth import routes as auth_routes
-from user import routes as user_routes
+from app.auth.routes import router as auth_routes
+from app.user.routes import router as user_routes
 
 routers = [
     auth_routes,

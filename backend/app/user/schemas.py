@@ -9,12 +9,12 @@ class UserCreate(BaseModel):
     username: str = Field(max_length=20, min_length=3, pattern=r"^[a-zA-Z0-9_]+$")
     password: str = Field(min_length=8, max_length=64)
 
-@field_validator("first_name", "middle_name", "last_name")
-@classmethod
-def strip_names(cls, value: str | None):
-    return value.strip() if value is not None else value
+    @field_validator("first_name", "middle_name", "last_name")
+    @classmethod
+    def strip_names(cls, value: str | None):
+        return value.strip() if value is not None else value
 
-class UserResponse(BaseModel):
+class UserInfo(BaseModel):
     id: int
     email: EmailStr
     first_name: str

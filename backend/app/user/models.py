@@ -23,6 +23,12 @@ class User(Base):
         index=True,
     )
 
+    username: Mapped[str] = mapped_column(
+        String,
+        unique=True,
+        index=True,
+    )
+
     first_name: Mapped[str] = mapped_column(String)
 
     middle_name: Mapped[str | None] = mapped_column(
