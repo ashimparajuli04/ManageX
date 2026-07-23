@@ -36,7 +36,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=1440)
+    access_token_expires = timedelta(minutes=5)
 
     access_token = create_access_token(
         data={"sub": user.email},
