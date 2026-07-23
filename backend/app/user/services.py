@@ -28,6 +28,7 @@ def create_user(session: Session, user_data: UserCreate):
 
     user = User(
         email=user_data.email,
+        username=user_data.username,
         first_name=user_data.first_name,
         middle_name=user_data.middle_name,
         last_name=user_data.last_name,
