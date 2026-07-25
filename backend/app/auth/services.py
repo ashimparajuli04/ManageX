@@ -1,22 +1,19 @@
-from typing import Annotated
+import os
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 
 import jwt
-from jwt import PyJWTError
-
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jwt import PyJWTError
 from sqlalchemy.orm import Session
-
-from app.core.database import get_session
 
 from app.auth.schemas import TokenData
 from app.auth.utils import verify_password
-
+from app.core.database import get_session
 from app.user.models import User, UserRole
 from app.user.services import get_user_by_email
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 

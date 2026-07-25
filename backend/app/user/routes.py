@@ -1,8 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.auth.services import get_current_active_user
 from app.core.database import get_session
 from app.user.schemas import UserCreate
 from app.user.services import create_user
@@ -14,7 +15,9 @@ router = APIRouter(
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@router.post("/signup", status_code=status.HTTP_201_CREATED)
+@router.post("/signup",
+    status_code=status.HTTP_201_CREATED,
+)
 def create_new_user(user_data: UserCreate, session: SessionDep):
     try:
         return create_user(session, user_data)

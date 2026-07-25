@@ -1,9 +1,9 @@
-from sqlalchemy import inspect, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth.utils import get_password_hash
 from app.user.models import User
 from app.user.schemas import UserCreate
-from app.auth.utils import get_password_hash
 
 
 def get_user_by_email(session: Session, email: str):
@@ -12,6 +12,10 @@ def get_user_by_email(session: Session, email: str):
 
 def get_user_by_username(session: Session, username: str):
     statement = select(User).where(User.username == username)
+    return session.scalar(statement)
+
+def get_email_by_username(session: Session, username: str):
+    statement = select(User.email).where(User.username == username)
     return session.scalar(statement)
 
 
@@ -37,5 +41,3 @@ def create_user(session: Session, user_data: UserCreate):
     
     session.add(user)
     session.commit()
-    session.refresh(user)
-    return inspect(user).dict

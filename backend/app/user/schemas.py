@@ -6,7 +6,11 @@ class UserCreate(BaseModel):
     middle_name: str | None = Field(default=None, max_length=20)
     last_name: str = Field(min_length=1, max_length=20)
     email: EmailStr
-    username: str = Field(max_length=20, min_length=3, pattern=r"^[a-zA-Z0-9_]+$")
+    username: str = Field(
+        max_length=20,
+        min_length=3,
+        pattern=r"^[a-zA-Z0-9_]+$",
+    )
     password: str = Field(min_length=8, max_length=64)
 
     @field_validator("first_name", "middle_name", "last_name")
