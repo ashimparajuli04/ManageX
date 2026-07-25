@@ -12,7 +12,9 @@ from sqlalchemy.orm import Session
 from app.auth.schemas import TokenData
 from app.auth.utils import verify_password
 from app.core.database import get_session
-from app.user.models import User, UserRole
+from app.user.models import User
+
+# from app.user.models import UserRole
 from app.user.services import get_user_by_email
 
 load_dotenv()
@@ -103,24 +105,24 @@ def get_current_active_user(
         )
     return current_user
 
-def require_role(*roles: UserRole):
-    def checker(user: User = Depends(get_current_active_user)):
-        print("USER ROLE:", user.role)
-        print("REQUIRED ROLES:", roles)
+# def require_role(*roles: UserRole):
+#     def checker(user: User = Depends(get_current_active_user)):
+#         print("USER ROLE:", user.role)
+#         print("REQUIRED ROLES:", roles)
 
-        if user.role not in roles:
-            raise HTTPException(status_code=403, detail="Forbidden")
-        return user
-    return checker
+#         if user.role not in roles:
+#             raise HTTPException(status_code=403, detail="Forbidden")
+#         return user
+#     return checker
 
 
     
-def require_admin(user: User = Depends(get_current_active_user)):
-    if user.role != UserRole.ADMIN:
-        raise HTTPException(status_code=403, detail="Forbidden")
-    return user
+# def require_admin(user: User = Depends(get_current_active_user)):
+#     if user.role != UserRole.ADMIN:
+#         raise HTTPException(status_code=403, detail="Forbidden")
+#     return user
 
 
-def require_staff():
-    return Depends(require_role(UserRole.ADMIN, UserRole.EMPLOYEE))
+# def require_staff():
+#     return Depends(require_role(UserRole.ADMIN, UserRole.EMPLOYEE))
 
