@@ -15,7 +15,7 @@ class UserRole(str, Enum):
     USER = "user"
 
 
-class OrganizationUsers(Base):
+class OrganizationUser(Base):
     __tablename__ = "organization_users"
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))

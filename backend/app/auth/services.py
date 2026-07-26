@@ -12,27 +12,26 @@ from sqlalchemy.orm import Session
 from app.auth.schemas import TokenData
 from app.auth.utils import verify_password
 from app.core.database import get_session
-from app.user.models import User
-
-# from app.user.models import UserRole
+from app.user.models import User, UserRole
 from app.user.services import get_user_by_email
 
 load_dotenv()
 
 
-SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-ALGORITHM = os.getenv('ALGORITHM')
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
 
 def authenticate_user(
     email: str,
     password: str,
     session: Session,  # ✅ plain Session
 ):
-    
+
     user = get_user_by_email(session, email)
     if not user:
         return None
@@ -63,6 +62,7 @@ def create_access_token(
         algorithm=ALGORITHM,
     )
 
+
 def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: SessionDep,
@@ -77,7 +77,7 @@ def get_current_user(
         payload = jwt.decode(
             token,
             SECRET_KEY,
-            algorithms=[ALGORITHM], #type: ignore
+            algorithms=[ALGORITHM],  # type: ignore
         )
         email = payload.get("sub")
         if email is None:
@@ -105,6 +105,7 @@ def get_current_active_user(
         )
     return current_user
 
+
 # def require_role(*roles: UserRole):
 #     def checker(user: User = Depends(get_current_active_user)):
 #         print("USER ROLE:", user.role)
@@ -113,16 +114,15 @@ def get_current_active_user(
 #         if user.role not in roles:
 #             raise HTTPException(status_code=403, detail="Forbidden")
 #         return user
+
 #     return checker
 
 
-    
-# def require_admin(user: User = Depends(get_current_active_user)):
-#     if user.role != UserRole.ADMIN:
-#         raise HTTPException(status_code=403, detail="Forbidden")
-#     return user
+def require_admin(user: User = Depends(get_current_active_user)):
+    if user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return user
 
 
 # def require_staff():
 #     return Depends(require_role(UserRole.ADMIN, UserRole.EMPLOYEE))
-
