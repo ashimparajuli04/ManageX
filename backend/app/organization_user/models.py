@@ -1,9 +1,6 @@
 from datetime import UTC, datetime
-from enum import Enum
-from turtle import back
 
-from sqlalchemy import DateTime, Enum as UniqueConstraint
-from sqlalchemy import ForeignKey
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -29,4 +26,6 @@ class OrganizationUser(Base):
     )
 
     user: Mapped[User] = relationship(back_populates="organization_users")
-    organization: Mapped[Organization] = relationship(back_populates="organization_users")
+    organization: Mapped[Organization] = relationship(
+        back_populates="organization_users"
+    )
