@@ -11,8 +11,5 @@ class Organization(Base):
         String,
         nullable=False
     )
-    organization_user = relationship(
-        "OrganizationUser",
-        back_populates="organization"
-    )
+    organization_user = relationship("OrganizationUser", back_populates="organization")
     

@@ -7,10 +7,10 @@ from app.user.models import User
 
 
 def create_organization(
-    session: Session, organization_data: OrganizationCreate, current_user: User
-):
-    organization = Organization(name=organization_data.name)
+    session: Session, organization_data: OrganizationCreate):
+    organization = Organization(
+        name=organization_data.name,
+    )
     session.add(organization)
     session.flush()
-    session.refresh(organization)
     return organization

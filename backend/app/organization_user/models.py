@@ -1,7 +1,8 @@
+from datetime import UTC, datetime
 from enum import Enum
 from turtle import back
 
-from sqlalchemy import Enum as SQLEnum, UniqueConstraint
+from sqlalchemy import DateTime, Enum as UniqueConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -10,18 +11,15 @@ from app.organization.models import Organization
 from app.user.models import User
 
 
-class UserRole(str, Enum):
-    ADMIN = "admin"
-    EMPLOYEE = "employee"
-    USER = "user"
-
-
 class OrganizationUser(Base):
     __tablename__ = "organization_users"
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
-
+    date_joined: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+    )
     __table_args__ = (
         UniqueConstraint(
             "user_id",

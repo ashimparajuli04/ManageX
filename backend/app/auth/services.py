@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
 import jwt
@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.auth.schemas import TokenData
 from app.auth.utils import verify_password
 from app.core.database import get_session
-from app.user.models import User, UserRole
+from app.user.models import User
 from app.user.services import get_user_by_email
 
 load_dotenv()
@@ -49,9 +49,9 @@ def create_access_token(
     to_encode = data.copy()
 
     expire = (
-        datetime.now(timezone.utc) + expires_delta
+        datetime.now(UTC) + expires_delta
         if expires_delta
-        else datetime.now(timezone.utc) + timedelta(minutes=15)
+        else datetime.now(UTC) + timedelta(minutes=15)
     )
 
     to_encode.update({"exp": expire})
@@ -96,11 +96,11 @@ def get_current_user(
 
 
 def get_current_active_user(
-    current_user: User = Depends(get_current_user),
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     if not current_user.is_active:
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Inactive user",
         )
     return current_user
@@ -116,12 +116,6 @@ def get_current_active_user(
 #         return user
 
 #     return checker
-
-
-def require_admin(user: User = Depends(get_current_active_user)):
-    if user.role != UserRole.ADMIN:
-        raise HTTPException(status_code=403, detail="Forbidden")
-    return user
 
 
 # def require_staff():

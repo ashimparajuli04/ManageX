@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 
-class OrganizationUserCreate(BaseModel):
+class RoleCreate(BaseModel):
+    name: str
     organization_id: int
-    user_id: int
+    
