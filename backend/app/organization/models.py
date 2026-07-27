@@ -1,5 +1,5 @@
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
@@ -11,5 +11,8 @@ class Organization(Base):
         String,
         nullable=False
     )
-    
+    organization_user = relationship(
+        "OrganizationUser",
+        back_populates="organization"
+    )
     

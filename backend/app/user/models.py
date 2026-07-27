@@ -2,9 +2,10 @@ from enum import Enum
 
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+from app.organization_user.models import OrganizationUser
 
 
 class UserRole(str, Enum):
@@ -47,3 +48,7 @@ class User(Base):
     )
 
     is_active: Mapped[bool] = mapped_column(default=True)
+
+    organization_users: Mapped[list[OrganizationUser]] = relationship(
+        back_populates="user"
+    )
