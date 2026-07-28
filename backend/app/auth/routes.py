@@ -3,11 +3,17 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.auth.schemas import Token
-from app.auth.services import authenticate_user, create_access_token
+from app.auth.services import (
+    authenticate_user,
+    create_access_token,
+    get_current_active_user,
+)
 from app.core.database import get_session
+from app.user.models import User
 
 router = APIRouter(
     prefix="/auth",
@@ -47,3 +53,18 @@ def login_for_access_token(
         token_type="bearer",
     )
 
+
+@router.delete("/wipe")
+def wipe_all_data(
+    session: SessionDep,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    tables = [
+        "organization_users",
+        "organizations",
+        "users",
+    ]
+    for table in tables:
+        session.execute(text(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE"))
+    session.commit()
+    return {"message": "All data wiped"}
