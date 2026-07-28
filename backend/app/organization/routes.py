@@ -7,7 +7,8 @@ from app.auth.services import get_current_active_user
 from app.core.database import get_session
 from app.organization.schemas import OrganizationCreate, OrganizationInfo
 from app.organization.services import create_organization
-from app.organization_user.models import OrganizationUser
+from app.organization_user.schemas import OrganizationUserCreate
+from app.organization_user.services import create_organization_user
 from app.user.models import User
 
 router = APIRouter(
@@ -18,12 +19,15 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/", response_model=OrganizationInfo)
-def create_new_organization(session: SessionDep, organization: OrganizationCreate, current_user: Annotated[User, Depends(get_current_active_user)]):
+def create_new_organization(
+    session: SessionDep,
+    organization: OrganizationCreate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
     org_data = create_organization(session, organization)
-    organization_user = OrganizationUser(
+    organization_user = OrganizationUserCreate(
         user_id=current_user.id,
         organization_id=org_data.id,
     )
-    session.add(organization_user)
+    create_organization_user(session, organization_user, commit=False)
     session.commit()
-    

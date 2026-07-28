@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.role.models import Role
-from app.role.schemas import RoleCreate
+from app.role_management.role.models import Role
+from app.role_management.role.schemas import RoleCreate
 
 
 def create_role(session: Session, role_data: RoleCreate):

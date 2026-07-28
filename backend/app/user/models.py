@@ -1,17 +1,9 @@
-from enum import Enum
-
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 from app.organization_user.models import OrganizationUser
-
-
-class UserRole(str, Enum):
-    ADMIN = "admin"
-    EMPLOYEE = "employee"
-    USER = "user"
 
 
 class User(Base):
@@ -42,11 +34,8 @@ class User(Base):
 
     password_hash: Mapped[str] = mapped_column(String)
 
-    role: Mapped[UserRole] = mapped_column(
-        SQLEnum(UserRole),
-        default=UserRole.EMPLOYEE,
-    )
-
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    organization_users: Mapped[list[OrganizationUser]] = relationship(back_populates="user")
+    organization_users: Mapped[list[OrganizationUser]] = relationship(
+        back_populates="user"
+    )

@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.permission.models import Permission
+from app.system_permission.models import Permission
 
 PERMISSIONS = [
     ("Roles", "view"),
