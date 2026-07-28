@@ -1,9 +1,13 @@
-from sqlalchemy import Enum as SQLEnum
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.organization_user.models import OrganizationUser
+
+if TYPE_CHECKING:
+    from app.organization.models import Organization
+    from app.organization_user.models import OrganizationUser
 
 
 class User(Base):
@@ -36,6 +40,10 @@ class User(Base):
 
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    organization_users: Mapped[list[OrganizationUser]] = relationship(
+    organization_users: Mapped[list["OrganizationUser"]] = relationship(
         back_populates="user"
     )
+    owned_organizations: Mapped[list["Organization"]] = relationship(
+        back_populates="owner"
+    )
+    

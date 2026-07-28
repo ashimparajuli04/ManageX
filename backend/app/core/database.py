@@ -21,8 +21,11 @@ SessionLocal = sessionmaker(
 
 
 def get_session():
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
+    except:
+        session.rollback()
+        raise
     finally:
-        db.close()
+        session.close()

@@ -24,10 +24,11 @@ def create_new_organization(
     organization: OrganizationCreate,
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
-    org_data = create_organization(session, organization)
+    org_data = create_organization(session, organization, current_user.id)
     organization_user = OrganizationUserCreate(
         user_id=current_user.id,
         organization_id=org_data.id,
     )
     create_organization_user(session, organization_user, commit=False)
     session.commit()
+    return org_data

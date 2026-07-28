@@ -1,7 +1,14 @@
-from sqlalchemy import String
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.user.models import User
+    from app.organization_user.models import OrganizationUser
+    
 
 
 class Organization(Base):
@@ -11,5 +18,10 @@ class Organization(Base):
         String,
         nullable=False
     )
-    organization_user = relationship("OrganizationUser", back_populates="organization")
-    
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    organization_users: Mapped[list["OrganizationUser"]] = relationship(
+        back_populates="organization"
+    )
+    owner: Mapped["User"] = relationship(
+        back_populates="owned_organizations"
+    )

@@ -1,11 +1,14 @@
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.organization.models import Organization
-from app.user.models import User
+
+if TYPE_CHECKING:
+    from app.organization.models import Organization
+    from app.user.models import User
 
 
 class OrganizationUser(Base):
@@ -25,7 +28,7 @@ class OrganizationUser(Base):
         ),
     )
 
-    user: Mapped[User] = relationship(back_populates="organization_users")
-    organization: Mapped[Organization] = relationship(
+    user: Mapped["User"] = relationship(back_populates="organization_users")
+    organization: Mapped["Organization"] = relationship(
         back_populates="organization_users"
     )
