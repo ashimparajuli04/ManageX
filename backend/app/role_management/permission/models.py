@@ -29,7 +29,7 @@ class Permission(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     type: Mapped[Type] = mapped_column(SQLEnum(Type))
     system_feature: Mapped[SystemFeature] = mapped_column(SQLEnum(SystemFeature), nullable=True)
-    instance_id: Mapped[str] = mapped_column(nullable=True)
+    instance_id: Mapped[str] = mapped_column(nullable=True, index=True)
     action: Mapped[Action] = mapped_column(SQLEnum(Action))
 
     __table_args__ = (

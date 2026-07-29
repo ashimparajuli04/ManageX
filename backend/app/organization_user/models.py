@@ -8,19 +8,20 @@ from app.core.database import Base
 
 if TYPE_CHECKING:
     from app.organization.models import Organization
+    from app.role_management.role.models import Role
     from app.user.models import User
 
 
 class OrganizationUser(Base):
     __tablename__ = "organization_users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"), index=True)
     date_joined: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
     )
-    role_id: Mapped[int] = mapped_column()
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), index=True)
     __table_args__ = (
         UniqueConstraint(
             "user_id",
@@ -33,3 +34,4 @@ class OrganizationUser(Base):
     organization: Mapped[Organization] = relationship(
         back_populates="organization_users"
     )
+    role: Mapped[Role] = relationship()

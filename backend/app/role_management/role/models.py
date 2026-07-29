@@ -9,7 +9,7 @@ class Role(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column()
-    organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
+    organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"), index=True)
     __table_args__ = (
         UniqueConstraint(
             "name",
