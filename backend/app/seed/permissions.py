@@ -1,28 +1,43 @@
-# from sqlalchemy import select
+from sqlalchemy import select
 
-# from app.core.database import SessionLocal
-# from app.system_permission.models import Permission
+from app.core.database import SessionLocal
+from app.role_management.permission.models import (
+    Action,
+    Permission,
+    SystemFeature,
+    Type,
+)
 
-# PERMISSIONS = [
-#     ("Roles", "view"),
-#     ("Roles", "create"),
-#     ("Roles", "edit"),
-#     ("Roles", "delete"),
-# ]
+SYSTEM_PERMISSIONS = [
+    # Roles
+    ("system", "role", None, "view"),
+    ("system", "role", None, "create"),
+    ("system", "role", None, "edit"),
+    ("system", "role", None, "delete"),
+]
 
 
-# def seed_permissions():
-#     session = SessionLocal()
-#     try:
-#         for module, action in PERMISSIONS:
-#             exists = session.scalar(
-#                 select(Permission).where(
-#                     Permission.module == module,
-#                     Permission.action == action,
-#                 )
-#             )
-#             if not exists:
-#                 session.add(Permission(module=module, action=action))
-#         session.commit()
-#     finally:
-#         session.close()
+def seed_permissions():
+    session = SessionLocal()
+    try:
+        for type, system_feature, instance_id, action in SYSTEM_PERMISSIONS:
+            exists = session.scalar(
+                select(Permission).where(
+                    Permission.type == Type(type),
+                    Permission.system_feature == SystemFeature(system_feature),
+                    Permission.instance_id == instance_id,
+                    Permission.action == Action(action),
+                )
+            )
+            if not exists:
+                session.add(
+                    Permission(
+                        type=Type(type),
+                        system_feature=SystemFeature(system_feature),
+                        instance_id=instance_id,
+                        action=Action(action),
+                    ),
+                )
+        session.commit()
+    finally:
+        session.close()

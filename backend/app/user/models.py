@@ -40,10 +40,10 @@ class User(Base):
 
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    organization_users: Mapped[list["OrganizationUser"]] = relationship(
+    organization_users: Mapped[list[OrganizationUser]] = relationship(
         back_populates="user"
     )
-    owned_organizations: Mapped[list["Organization"]] = relationship(
+    owned_organizations: Mapped[list[Organization]] = relationship(
         back_populates="owner"
     )
     

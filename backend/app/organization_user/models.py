@@ -20,6 +20,7 @@ class OrganizationUser(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
     )
+    role_id: Mapped[int] = mapped_column()
     __table_args__ = (
         UniqueConstraint(
             "user_id",
@@ -28,7 +29,7 @@ class OrganizationUser(Base):
         ),
     )
 
-    user: Mapped["User"] = relationship(back_populates="organization_users")
-    organization: Mapped["Organization"] = relationship(
+    user: Mapped[User] = relationship(back_populates="organization_users")
+    organization: Mapped[Organization] = relationship(
         back_populates="organization_users"
     )
