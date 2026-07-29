@@ -15,5 +15,5 @@ class Role(Base):
             "name",
             "organization_id",
             name="unique_name_organization",
-        )
+        ),
     )

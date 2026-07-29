@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
 
-from app.core.all_routes import routers
+from app.core.all_needed_imports import routers
 from app.seed.permissions import seed_permissions
 
 
