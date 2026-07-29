@@ -13,7 +13,7 @@ from app.auth.schemas import TokenData
 from app.auth.utils import verify_password
 from app.core.database import get_session
 from app.user.models import User
-from app.user.services import get_user_by_email
+from app.user.services import get_user_by_email_username
 
 load_dotenv()
 
@@ -27,12 +27,12 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 def authenticate_user(
-    email: str,
+    identifier: str,
     password: str,
     session: Session,  # ✅ plain Session
 ):
 
-    user = get_user_by_email(session, email)
+    user = get_user_by_email_username(session, identifier)
     if not user:
         return None
 
@@ -88,7 +88,7 @@ def get_current_user(
     except PyJWTError:
         raise credentials_exception
 
-    user = get_user_by_email(session, token_data.email)
+    user = get_user_by_email_username(session, token_data.email)
     if not user:
         raise credentials_exception
 

@@ -6,25 +6,19 @@ from app.user.models import User
 from app.user.schemas import UserCreate
 
 
-def get_user_by_email(session: Session, email: str):
-    statement = select(User).where(User.email == email)
-    return session.scalar(statement)
-
-def get_user_by_username(session: Session, username: str):
-    statement = select(User).where(User.username == username)
-    return session.scalar(statement)
-
-def get_email_by_username(session: Session, username: str):
-    statement = select(User.email).where(User.username == username)
-    return session.scalar(statement)
+def get_user_by_email_username(session: Session, useridentifier: str):
+    if "@" in useridentifier:
+        return session.scalar(select(User).where(User.email == useridentifier))
+    else:
+        return session.scalar(select(User).where(User.username == useridentifier))
 
 
 def create_user(session: Session, user_data: UserCreate):
     errors = {}
     
-    if get_user_by_email(session, user_data.email):
+    if get_user_by_email_username(session, user_data.email):
         errors["email"] = "User with this email already exists"
-    if get_user_by_username(session, user_data.username):
+    if get_user_by_email_username(session, user_data.username):
         errors["username"] = "User with this username already exists"
     if errors:
         raise ValueError(errors)
