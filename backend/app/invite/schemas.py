@@ -12,5 +12,5 @@ class InviteInfo(BaseModel):
     created_at: datetime
 
 class InviteCreate(BaseModel):
-    email: str
+    user_identifier: str
     organization_id: int

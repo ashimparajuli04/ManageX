@@ -19,10 +19,10 @@ class Invite(Base):
     __tablename__ = "invites"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    org_id: Mapped[int] = mapped_column(
+    organization_id: Mapped[int] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"), index=True
     )
-    email: Mapped[str] = mapped_column(index=True)
+    user_identifier: Mapped[str] = mapped_column(index=True)
     invited_by: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
@@ -33,8 +33,8 @@ class Invite(Base):
     )
     __table_args__ = (
         UniqueConstraint(
-            "org_id",
-            "email",
+            "organization_id",
+            "user_identifier",
             "invited_by",
             name="unique_invite",
         ),

@@ -41,7 +41,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=5)
+    access_token_expires = timedelta(minutes=5000)
 
     access_token = create_access_token(
         data={"sub": user.email},
@@ -62,7 +62,7 @@ def wipe_all_data(
     tables = [
         "organization_users",
         "organizations",
-        "users",
+        "invites",
     ]
     for table in tables:
         session.execute(text(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE"))
