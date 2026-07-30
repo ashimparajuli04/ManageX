@@ -14,6 +14,11 @@ SYSTEM_PERMISSIONS = [
     ("system", "role", None, "create"),
     ("system", "role", None, "edit"),
     ("system", "role", None, "delete"),
+    
+    ("system", "member", None,"view"),
+    ("system", "member", None, "edit"),
+    ("system", "member", None, "remove"),
+    ("system", "member", None, "invite"),
 ]
 
 

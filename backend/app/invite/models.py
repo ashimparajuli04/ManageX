@@ -1,8 +1,7 @@
 from datetime import UTC, datetime
 from enum import Enum
 
-from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
-from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -26,7 +25,7 @@ class Invite(Base):
     invited_by: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
-    status: Mapped[InviteStatus] = mapped_column(SQLEnum(InviteStatus), default=InviteStatus.PENDING, index=True)
+    status: Mapped[InviteStatus] = mapped_column(String, default=InviteStatus.PENDING, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
