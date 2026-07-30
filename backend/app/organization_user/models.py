@@ -22,6 +22,7 @@ class OrganizationUser(Base):
         default=lambda: datetime.now(UTC),
     )
     role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), index=True)
+    is_active: Mapped[bool] = mapped_column(default=True)
     __table_args__ = (
         UniqueConstraint(
             "user_id",

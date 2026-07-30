@@ -1,3 +1,4 @@
+from app.invite.models import Invite
 from app.organization.models import Organization
 from app.organization_user.models import OrganizationUser
 from app.role_management.permission.models import Permission

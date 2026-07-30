@@ -15,3 +15,13 @@ def create_organization_user(
     if commit:
         session.commit()
     return organization_user
+
+def membership(session: Session, organization_id: int, user_id: int) -> bool:
+    membership = session.query(OrganizationUser).filter(
+        OrganizationUser.organization_id == organization_id,
+        OrganizationUser.user_id == user_id,
+        OrganizationUser.is_active == True
+    ).first()
+    if not membership:
+        raise ValueError("The user is not a member of the organization")
+    return True

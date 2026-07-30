@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
 if TYPE_CHECKING:
+    from app.invite.models import Invite
     from app.organization.models import Organization
     from app.organization_user.models import OrganizationUser
 
@@ -46,4 +47,5 @@ class User(Base):
     owned_organizations: Mapped[list[Organization]] = relationship(
         back_populates="owner"
     )
+    invitations: Mapped[list[Invite]] = relationship()
     
