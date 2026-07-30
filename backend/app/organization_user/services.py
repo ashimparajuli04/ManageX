@@ -7,6 +7,11 @@ from app.organization_user.schemas import OrganizationUserCreate
 def create_organization_user(
     session: Session, org_user_data: OrganizationUserCreate, commit: bool = True
 ):
+    if session.query(OrganizationUser).filter(
+        OrganizationUser.user_id == org_user_data.user_id,
+        OrganizationUser.organization_id == org_user_data.organization_id,
+    ).first():
+        raise ValueError("Organization user already exists")
     organization_user = OrganizationUser(
         user_id=org_user_data.user_id,
         organization_id=org_user_data.organization_id,

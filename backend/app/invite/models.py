@@ -10,7 +10,7 @@ from app.core.database import Base
 class InviteStatus(str, Enum):
     PENDING = "pending"
     ACCEPTED = "accepted"
-    DECLINED = "declined"
+    REJECTED = "rejected"
     SEEN = "seen"
 
 
