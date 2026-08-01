@@ -59,20 +59,15 @@ def get_received_invites(
             ),
             or_(
                 Invite.user_identifier == current_user.email,
-                Invite.user_identifier == current_user.username,
             ),
         )
         .all()
     )
-    for invite in invites:
-        if invite.status == InviteStatus.PENDING:
-            invite.status = InviteStatus.SEEN
-    session.commit()
     return invites
 
 
-@router.get("/new_invites_count")
-def get_invites(
+@router.post("/flag-invites-seen")
+def flag_invites_seen(
     session: SessionDep,
     current_user: Annotated[UserInfo, Depends(get_current_active_user)],
 ):
@@ -80,14 +75,29 @@ def get_invites(
         session.query(Invite)
         .filter(
             Invite.status == InviteStatus.PENDING,
-            or_(
-                Invite.user_identifier == current_user.email,
-                Invite.user_identifier == current_user.username,
-            ),
+            Invite.user_identifier == current_user.email,
         )
         .all()
     )
-    return len(invites)
+    for invite in invites:
+        invite.status = InviteStatus.SEEN
+    session.commit()
+
+
+@router.get("/new_invites_count")
+def get_invites(
+    session: SessionDep,
+    current_user: Annotated[UserInfo, Depends(get_current_active_user)],
+):
+    count = (
+        session.query(Invite)
+        .filter(
+            Invite.status == InviteStatus.PENDING,
+            Invite.user_identifier == current_user.email,
+        )
+        .count()
+    )
+    return count
 
 
 @router.post("/invite-response")
@@ -101,8 +111,10 @@ def invite_response(
     if not invite:
         raise HTTPException(404, "Invite not found")
 
-    if not (invite.user_identifier == current_user.email
-            or invite.user_identifier == current_user.username):
+    if not (
+        invite.user_identifier == current_user.email
+        or invite.user_identifier == current_user.username
+    ):
         raise HTTPException(403, "This invite is not for you")
 
     if invite.status == InviteStatus.ACCEPTED or invite.status == InviteStatus.REJECTED:
@@ -113,8 +125,7 @@ def invite_response(
             create_organization_user(
                 session,
                 OrganizationUserCreate(
-                    user_id=current_user.id,
-                    organization_id=invite.organization_id
+                    user_id=current_user.id, organization_id=invite.organization_id
                 ),
                 commit=False,
             )
@@ -125,4 +136,4 @@ def invite_response(
         invite.status = InviteStatus.REJECTED
 
     session.commit()
-    return {"message": f"Invite {body.status.value}"}
+    return {"message": f"Invite {body.status}"}

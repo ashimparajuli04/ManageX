@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -12,11 +13,12 @@ class InviteInfo(BaseModel):
     status: InviteStatus
     created_at: datetime
 
+
 class InviteCreate(BaseModel):
     user_identifier: str
     organization_id: int
 
+
 class InviteResponse(BaseModel):
     invite_id: int
-    status: InviteStatus
-    
+    status: Literal["accepted", "rejected"]
