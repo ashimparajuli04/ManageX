@@ -6,4 +6,5 @@ class OrganizationCreate(BaseModel):
 
 
 class OrganizationInfo(BaseModel):
+    id: int
     name: str

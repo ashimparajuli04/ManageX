@@ -3,8 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.auth.services import get_current_active_user
 from app.core.database import get_session
-from app.user.schemas import UserCreate
+from app.user.models import User
+from app.user.schemas import UserCreate, UserInfo
 from app.user.services import create_user
 
 router = APIRouter(
@@ -26,4 +28,7 @@ def create_new_user(user_data: UserCreate, session: SessionDep):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=e.args[0],
         )
-    
+
+@router.get("/", response_model=UserInfo)
+def get_my_info(session: SessionDep, current_user: Annotated[User, Depends(get_current_active_user)]):
+    return current_user

@@ -34,11 +34,13 @@ def create_invite(
             or invite_data.user_identifier == current_user.username
         ):
             raise ValueError("You cannot invite yourself")
-        membership(session, invite_data.organization_id, current_user.id)
-        send_invite(session, invite_data, current_user.id)
-        return {
-            "message": f"invite has been successfully sent to {invite_data.user_identifier}"
-        }
+        if membership(session, invite_data.organization_id, current_user.id):
+            send_invite(session, invite_data, current_user.id)
+            return {
+                "message": f"invite has been successfully sent to {invite_data.user_identifier}"
+            }
+        else:
+            raise ValueError("You are not a member of this organization")
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.args[0])
 
