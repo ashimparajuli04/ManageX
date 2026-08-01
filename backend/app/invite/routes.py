@@ -57,9 +57,7 @@ def get_received_invites(
                 Invite.status == InviteStatus.PENDING,
                 Invite.status == InviteStatus.SEEN,
             ),
-            or_(
-                Invite.user_identifier == current_user.email,
-            ),
+            Invite.user_identifier == current_user.email,
         )
         .all()
     )
@@ -111,10 +109,7 @@ def invite_response(
     if not invite:
         raise HTTPException(404, "Invite not found")
 
-    if not (
-        invite.user_identifier == current_user.email
-        or invite.user_identifier == current_user.username
-    ):
+    if not (invite.user_identifier == current_user.email):
         raise HTTPException(403, "This invite is not for you")
 
     if invite.status == InviteStatus.ACCEPTED or invite.status == InviteStatus.REJECTED:
