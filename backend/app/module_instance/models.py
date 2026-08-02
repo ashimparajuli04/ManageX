@@ -7,7 +7,7 @@ from app.core.database import Base
 class ModuleInstance(Base):
     __tablename__ = "module_instances"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     template: Mapped[str] = mapped_column(String)
     organization_id: Mapped[int] = mapped_column(

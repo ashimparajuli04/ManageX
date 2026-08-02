@@ -1,10 +1,10 @@
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.role_management.system_permission.models import (
+from app.role_management.system.system_permission.models import (
     Action,
     Feature,
-    Permission,
+    SystemPermission,
 )
 
 SYSTEM_PERMISSIONS = [
@@ -25,14 +25,14 @@ def seed_permissions():
     try:
         for feature, action in SYSTEM_PERMISSIONS:
             exists = session.scalar(
-                select(Permission).where(
-                    Permission.feature == Feature(feature),
-                    Permission.action == Action(action),
+                select(SystemPermission).where(
+                    SystemPermission.feature == Feature(feature),
+                    SystemPermission.action == Action(action),
                 )
             )
             if not exists:
                 session.add(
-                    Permission(
+                    SystemPermission(
                         feature=Feature(feature),
                         action=Action(action),
                     ),

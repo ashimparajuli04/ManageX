@@ -21,8 +21,8 @@ class Action(str, Enum):
     REMOVE = "remove"
 
 
-class Permission(Base):
-    __tablename__ = "permissions"
+class SystemPermission(Base):
+    __tablename__ = "system_permissions"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     feature: Mapped[Feature] = mapped_column(String)
