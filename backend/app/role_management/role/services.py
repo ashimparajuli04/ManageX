@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 
 from app.role_management.role.models import Role
-from app.role_management.role.schemas import RoleCreate, RoleInfo
+from app.role_management.role.schemas import RoleInfo
 
 
-def create_role(session: Session, role_data: RoleCreate) -> RoleInfo:
+def create_role(session: Session, organization_id: int, name: str) -> RoleInfo:
 
     role = Role(
-        name=role_data.name,
-        organization_id=role_data.organization_id,
+        name=name,
+        organization_id=organization_id,
     )
     session.add(role)
     session.commit()
