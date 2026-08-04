@@ -15,8 +15,8 @@ from app.user.models import User
 from app.user.schemas import UserInfo
 
 router = APIRouter(
-    prefix="/invite",
-    tags=["invite"],
+    prefix="/invites",
+    tags=["invites"],
 )
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -83,7 +83,7 @@ def flag_invites_seen(
 
 
 @router.get("/new_invites_count")
-def get_invites(
+def get_new_invites_count(
     session: SessionDep,
     current_user: Annotated[UserInfo, Depends(get_current_active_user)],
 ):
@@ -98,8 +98,8 @@ def get_invites(
     return count
 
 
-@router.post("/invite-response")
-def invite_response(
+@router.patch("/invite-response")
+def invite_update(
     session: SessionDep,
     body: InviteResponse,
     current_user: Annotated[User, Depends(get_current_active_user)],

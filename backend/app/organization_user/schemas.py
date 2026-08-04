@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from pydantic.fields import Field
 
 
 class OrganizationUserCreate(BaseModel):
@@ -8,4 +9,4 @@ class OrganizationUserCreate(BaseModel):
 class OrganizationUserInfo(BaseModel):
     organization_id: int
     user_id: int
-    role: str
+    role: str | None    

@@ -16,7 +16,12 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    swagger_ui_parameters={
+        "persistAuthorization": True
+    }
+)
 
 for router in routers:
     app.include_router(router)
@@ -29,6 +34,7 @@ async def scalar_html():
         title="ManageX API",
         persist_auth=True,
     )
+
 
 
 app.add_middleware(

@@ -11,7 +11,7 @@ from app.role_management.system.system_permission.schemas import SystemPermissio
 SessionDep = Annotated[Session, Depends(get_session)]
 
 router = APIRouter(
-    prefix="/{organization_id}/role-permissions", tags=["role-permissions"]
+    prefix="/{organization_id}/system-role-permissions", tags=["role-permissions"]
 )
 
 

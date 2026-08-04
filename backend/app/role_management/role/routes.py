@@ -12,7 +12,7 @@ from app.role_management.service import check_permission
 SessionDep = Annotated[Session, Depends(get_session)]
 
 router = APIRouter(
-    prefix="/{organization_id}/roles",
+    prefix="/organizations/{organization_id}/roles",
     tags=["roles"],
 )
 
@@ -24,17 +24,17 @@ def create_new_role(
     if session.query(Role).filter_by(organization_id=organization_id, name=role_data.name).first():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Role already exists")
     create_role(session, organization_id, role_data.name)
-    return HTTPException(status_code=status.HTTP_201_CREATED, detail="Role created successfully")
+    raise HTTPException(status_code=status.HTTP_201_CREATED, detail="Role created successfully")
 
 @router.get("", dependencies=[Depends(check_permission)], response_model=list[RoleInfo])
 def get_roles(
     session: SessionDep, organization_id: int
 ):
     roles = session.query(Role).filter_by(organization_id=organization_id).all()
-    return RoleInfo.model_validate(roles, from_attributes=True)
+    return [RoleInfo.model_validate(r, from_attributes=True) for r in roles]
 
 @router.get("/{role_id}", dependencies=[Depends(check_permission)], response_model=RoleInfo)
-def get_role(
+def get_role_by_id(
     session: SessionDep, organization_id: int, role_id: int
 ):
     role = session.query(Role).filter_by(organization_id=organization_id, id=role_id).first()
