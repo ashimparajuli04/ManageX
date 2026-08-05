@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
+class RoleSystemPermissionCreate(BaseModel):
+    system_permission_id: list[int]
 
-class RoleSystemPermission(BaseModel):
-    role_id: int
-    system_permission_id: int
