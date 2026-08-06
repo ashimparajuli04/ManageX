@@ -4,6 +4,9 @@ from app.invite.routes import router as invite_routes
 from app.organization.routes import router as organization_routes
 from app.organization_user.routes import router as organization_user_routes
 from app.role_management.role.routes import router as role_routes
+from app.role_management.system.role_system_permission.routers import (
+    router as role_system_permission_routes,
+)
 from app.role_management.system.system_permission.routes import (
     router as system_permission_routes,
 )
@@ -17,4 +20,5 @@ routers = [
     role_routes,
     system_permission_routes,
     organization_user_routes,
+    role_system_permission_routes,
 ]

@@ -1,6 +1,7 @@
+import sys
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_session
@@ -24,18 +25,36 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 @router.post("/", dependencies=[Depends(check_permission)])
 def get_role_system_permissions(
-    session: SessionDep, system_permission_id: RoleSystemPermissionCreate, role_id: int
+    session: SessionDep, payload: RoleSystemPermissionCreate, role_id: int
 ):
     if session.get(Role, role_id) is None:
         return {"error": "Role not found"}
-    if session.get(SystemPermission, system_permission_id) is None:
-        return {"error": "Please enter a valid system permission ID"}
-    if session.get(RoleSystemPermission, (role_id, system_permission_id)) is not None:
-        return {"error": "Role system permission already exists"}
-    role_system_permission = RoleSystemPermission(
-        role_id=role_id,
-        system_permission_id=system_permission_id,
-    )
-    session.add(role_system_permission)
+
+    system_permission_ids = [id[0] for id in session.query(SystemPermission.id).all()]
+
+    for item in payload.permissions:
+        if item.system_permission_id not in system_permission_ids:
+            return {"error": "System permission not found"}
+        if item.verdict and session.get(
+            RoleSystemPermission, (role_id, item.system_permission_id)
+        ):
+            continue
+        if (
+            item.verdict
+            and session.get(RoleSystemPermission, (role_id, item.system_permission_id))
+            is None
+        ):
+            continue
+        if item.verdict == True:
+            session.add(
+                RoleSystemPermission(
+                    role_id=role_id, system_permission_id=item.system_permission_id
+                )
+            )
+        else:
+            session.delete(
+                session.get(RoleSystemPermission, (role_id, item.system_permission_id))
+            )
+
     session.commit()
-    return {"message": "Role system permission added successfully"}
+    return {"message": "Role system permissions updated successfully"}
