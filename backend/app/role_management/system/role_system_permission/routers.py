@@ -34,15 +34,15 @@ def get_role_system_permissions(
 
     for item in payload.permissions:
         if item.system_permission_id not in system_permission_ids:
+            session.rollback()
             return {"error": "System permission not found"}
         if item.verdict and session.get(
             RoleSystemPermission, (role_id, item.system_permission_id)
         ):
             continue
         if (
-            item.verdict
-            and session.get(RoleSystemPermission, (role_id, item.system_permission_id))
-            is None
+            item.verdict is False
+            and session.get(RoleSystemPermission, (role_id, item.system_permission_id)) is None
         ):
             continue
         if item.verdict == True:
@@ -58,3 +58,15 @@ def get_role_system_permissions(
 
     session.commit()
     return {"message": "Role system permissions updated successfully"}
+
+
+@router.get("/", dependencies=[Depends(check_permission)])
+def get_role_system_permissions(
+    session: SessionDep,
+    role_id: int,
+):
+    role_system_permissions = session.query(RoleSystemPermission).filter_by(role_id=role_id).all()
+    return [
+        {"system_permission_id": permission.system_permission_id}
+        for permission in role_system_permissions
+    ]
